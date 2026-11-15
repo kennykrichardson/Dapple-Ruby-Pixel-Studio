@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'optparse'
+require_relative '../lib/dapple'
+
+if ARGV.first == 'generate'
+  ARGV.shift
+  options = { algorithm: :noise, seed: 0, size: 48, palette: 'Sunset', scale: 8,
+              params: Dapple::PatternDNA.new.to_h }
+  parser = OptionParser.new do |opts|
+    opts.banner = 'Usage: dapple generate [options] output.png'
+    opts.on('-a', '--algorithm NAME', 'noise, symmetry, terrain, cellular, bayer') { |value| options[:algorithm] = value.to_sym }
+    opts.on('-s', '--seed INTEGER', Integer, 'Reproducible integer seed') { |value| options[:seed] = value }
+    opts.on('--size PIXELS', Integer, 'Square canvas size (32, 48, 64, 96, 128, max 256)') { |value| options[:size] = value }
+    opts.on('-p', '--palette NAME', 'Moss, Sunset, Ocean, Candy, Arcade, Neon, Earth, Mono') { |value| options[:palette] = value }
+    opts.on('--scale INTEGER', Integer, 'PNG export scale (1–64)') { |value| options[:scale] = value }
+    opts.on('--density FLOAT', Float, 'Noise density from 0.05 to 1.0') { |value| options[:params][:noise_density] = value }
+    opts.on('--octaves INTEGER', Integer, 'Noise octaves from 1 to 7') { |value| options[:params][:octaves] = value }
+    opts.on('--roughness FLOAT', Float, 'Terrain roughness from 0.1 to 1.0') { |value| options[:params][:terrain_roughness] = value }
+    opts.on('-h', '--help', 'Show this help') { puts opts; exit }
+  end
+
+  begin
+    parser.parse!(ARGV)
+    output = ARGV.shift
+    raise OptionParser::MissingArgument, 'output.png' unless output
+    raise OptionParser::InvalidArgument, 'size must be between 1 and 256' unless options[:size].between?(1, 256)
+    palette = Dapple::Palettes.fetch(options[:palette])
+    pixels = Dapple::Generators.generate(algorithm: options[:algorithm], width: options[:size],
+                                         height: options[:size], palette: palette,
+                                         seed: options[:seed], params: options[:params])
+    document = Dapple::Document.new(width: options[:size], height: options[:size])
+    document.replace!(pixels)
+    Dapple::Exporter.export(document, output, scale: options[:scale])
+    puts "Generated #{options[:algorithm]} · seed #{options[:seed]} · #{options[:size]}×#{options[:size]} · #{File.expand_path(output)}"
+  rescue StandardError => error
+    warn "dapple: #{error.message}"
+    exit 1
+  end
+else
+  require_relative '../lib/dapple/editor'
+  Dapple::Editor.new
+  if RUBY_PLATFORM.match?(/mswin|mingw|cygwin/i)
+    maximized = false
+    Ruby2D::Window.update do
+      unless maximized
+        maximized = true
+        Dapple::Editor.maximize_native_window
+      end
+    end
+  end
+  Ruby2D::Window.show
+end
