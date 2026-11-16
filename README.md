@@ -2,6 +2,8 @@
 
 ### A Pixel Studio by Kenny Richardson
 
+🌐 **[Explore My Complete Portfolio](https://www.kennykrichardson.com)**
+
 **A desktop pixel-art editor meets a reproducible procedural-art laboratory.**
 
 Dapple gives you a hands-on pixel editor, a collection of expressive color universes, and a procedural generation system driven by editable parameters and reproducible seeds. Sketch pixel by pixel, generate a landscape from a seed, explore nearby mutations, then export the result as a crisp PNG.
