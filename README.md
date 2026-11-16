@@ -65,6 +65,9 @@ Choose from eight built-in six-color palettes:
 
 The Palette Lab also supports custom hex colors, gradient ramps, imported GIMP `.gpl` and JSON palettes, multi-page swatches, and explicit remapping of existing artwork. Changing palettes does not silently recolor the current document; use **Remap Art** when you want to translate existing pixels.
 
+### 📋 Dapple Dashboard
+![Dapple Dashboard](screenshots/dapple-dashboard.png)
+
 ## 🧬 Pattern DNA & Generation
 
 Every generated composition is determined by an algorithm, a set of DNA parameters, and an integer seed. Reuse the same inputs to reproduce the same output.
