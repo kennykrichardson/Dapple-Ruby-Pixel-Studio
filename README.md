@@ -217,4 +217,4 @@ Dapple is released under the [MIT License](LICENSE).
 
 ---
 
-<p align="center">Made with ❤️, pixels, and a little procedural chaos.</p>
+# 🛠️ Engineered by Kenny Richardson Kodipally
